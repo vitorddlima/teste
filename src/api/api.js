@@ -1,5 +1,5 @@
 import axios from "axios";
 
-export const apiRick = axios.create({
+export const api = axios.create({
     baseURL: "https://rickandmortyapi.com/api"
 })

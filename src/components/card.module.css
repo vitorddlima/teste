@@ -1,9 +1,10 @@
-.imgstyle{
-    width: 200px;
-    height: auto;
+.wrapCard{
+    background-color: red !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
     border-radius: 10px;
-}
-
-.title{
-    font-size: 16px;
+    width: 350px;
 }

@@ -1,10 +1,10 @@
-import style from './card.module.css'
+import style from "./card.module.css"
 
-export const Card = ({name, image}) => {
+export const Card = (props) => {
     return(
-        <>
-            <h5 className={style.title}>{name}</h5>
-            <img className={style.imgstyle} src={image} alt={name} />
-        </>
+        <div className={style.wrapCard}>
+            <h3>{props.text}</h3>
+            <img src={props.img} alt={props.text} />
+        </div>
     )
 }

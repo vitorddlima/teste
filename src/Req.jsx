@@ -1,54 +1,59 @@
-import { useState, useEffect } from 'react'
-import style from './Req.module.css'
-import { apiRick } from './api/api'
-import { Card } from './components/card'
+import { useEffect, useState } from "react"
+import { api } from "./api/api"
 
-export default function Req(){
+import { Card } from "./components/card"
+
+import style from './Req.module.css'
+import ModalInfo from "./components/modalInfo"
+import Tilt from 'react-parallax-tilt';
+
+export default function Req() {
     const [data, setData] = useState([])
     const [page, setPage] = useState("")
     const [searchName, setSearchName] = useState("")
-
     const [erro, setErro] = useState(false)
+    const [modal, setModal] = useState();
+
 
     useEffect(() => {
-        apiRick.get(`/character/?page=${page}&name=${searchName}`).then((response) => {
-            setData(response.data.results)
+        api.get(`/character/?page=${page}&name=${searchName}`).then((res) => {
+            setErro(false)
+            setData(res.data.results)
         }).catch((error) => {
-            if(error.response.status === 404){
+            if (error.response.status === 404) {
                 setErro(true)
             }
             console.error(error)
         })
     }, [page, searchName])
 
-    return(
-        <section className={style.wrapPage}>
-            <h1 className={style.titleName}>Rick and Morty API</h1>
-            <input
-              style={{padding: "10px", marginRight: "10px"}}  
-              type="text"
-              placeholder='Digite uma página (1/120)'
-              value={page}
-              onChange={(e) => setPage(e.target.value)}/>
-            <input 
-              style={{padding: "10px"}}  
-              type="text"
-              placeholder='Digite um nome'
-              value={searchName}
-              onChange={(e) => setSearchName(e.target.value)}/>
-      
-            {erro && <p>Página não encontrada</p>}
-            
+    return (
+        <>
 
-            <div className={style.wrapCards}>
-            {data.map((item, index) => {
-                return(
-                    <div key={index}>
-                      <Card name={item.name} image={item.image}/>
+        {modal !== undefined && <ModalInfo data={data[modal]} close={() => setModal()}/>}
+        
+        <section className={style.opa}>
+            <h1>RICK AND MORTY API</h1>
+            <br />
+            {erro && <p style={{ color: "red" }}>Página ou personagem não existe, 1 até 42</p>}
+            <input style={{ width: "330px", marginRight: "10px", padding: "10px" }} type="text" placeholder="Digite uma pagina (1/42)" value={page} onChange={(event) => setPage(event.target.value)} />
+            <input style={{ width: "330px", padding: "10px" }} type="text" placeholder="Digite um nome de personagem" value={searchName} onChange={(event) => setSearchName(event.target.value)} />
+            <br />
+            <br />
+            <div className={style.wrapAll1}>
+
+                {data.map((item, index) => (
+                    <div key={index} style={{ display: "flex", flexDirection: "column" }}>
+                        <Tilt >
+                        <Card img={item.image} text={item.name} />
+                        </Tilt>
+                        <button style={{ maxWidth:"70%", marginTop: "10px" }} onClick={() => setModal(index)}>Info - {item.name}</button>
                     </div>
-                )
-            })}
+                ))}
+
             </div>
         </section>
+        </>
+
     )
 }
